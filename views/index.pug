@@ -1,0 +1,10 @@
+extends layout
+
+block content
+  h1= title
+  p Welcome to #{title}
+  form(action='add-ticket', method='POST')
+    p
+      input(type='text', name='name', placeholder='Full name')
+      input(type='text', name='code', placeholder='Full name')
+    input(type='Submit', value='Add')
