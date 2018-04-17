@@ -1,10 +1,61 @@
 extends layout
 
 block content
+  script.
+    function editHandle(id, name, code){
+      document.getElementById('id_handle').value = id;
+      document.getElementById('edit_name').value = name;
+      document.getElementById('edit_code').value = code;
+    }
+    function deleteHandle(id){
+       $.ajax({
+        url: `/api/tickets/${id}`,
+        type: 'DELETE',
+        success: function(data) {
+          location.reload()
+        }
+      });
+    }
+    function submitEdit(){
+      var id = document.getElementById('id_handle').value;
+      var name = document.getElementById('edit_name').value;
+      var code = document.getElementById('edit_code').value;
+      console.log(`/api/tickets/:${id}`);
+      $.ajax({
+        url: `/api/tickets/${id}`,
+        type: 'PUT',
+        data: {name, code},
+        success: function(data) {
+          location.reload()
+        }
+      });
+    }
   h1= title
   p Welcome to #{title}
-  form(action='add-ticket', method='POST')
+  form(action='/api/tickets', method='POST')
     p
       input(type='text', name='name', placeholder='Full name')
       input(type='text', name='code', placeholder='Full name')
     input(type='Submit', value='Add')
+  form
+    input(type='hidden', id='id_handle', name='STT')
+    input(type='text', id='edit_name' ,name='name')
+    input(type='text', id='edit_code', name='code')
+  button(onClick='submitEdit()') Edit
+  table
+    tr
+      th STT
+      th Name
+      th Code
+      th Edit
+      each e in data
+        tr 
+          td= e.STT
+          td= e.name
+          td= e.code
+          td
+            a(onClick=`deleteHandle(${e.STT})`) Delete
+          td
+            a(onClick=`editHandle(${e.STT}, '${e.name}', '${e.code}')` ) Edit
+      
+        

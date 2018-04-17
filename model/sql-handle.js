@@ -20,14 +20,17 @@ class MySQL {
     return this.con;
   }
 
-  query(sql,args) {
-     this.con.query(sql,[args], function (err, rows, fields) {
-      if (err) throw err
-    });
-
+  query(sql, args) {
+    return new Promise((resolve,reject)=>{
+      this.con.query(sql, [args], function (err, data) {
+      if(err){
+        return reject(err);
+      }
+      return resolve(data);
+      
+      });
+    })
   }
-
-
 }
 const sql = new MySQL();
 module.exports = sql.query.bind(sql);
